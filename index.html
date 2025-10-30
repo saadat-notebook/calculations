@@ -14,7 +14,6 @@
   <style>
     /* --- THEMES: LIGHT & DARK --- */
     :root {
-      /* Light Theme (Default) */
       --bg: #f5f5f5; --fg: #121212; --card-bg: #ffffff;
       --muted: #666666; --border: #e0e0e0; --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
       --accent: #121212; --accent-fg: #ffffff; --progress-bar-bg: #e0e0e0;
@@ -30,63 +29,65 @@
         --unlocked-bg: #2a2a2a; --next-unlock-bg: #3c3c3c;
       }
     }
-    /* --- GENERAL STYLES --- */
+    /* --- GENERAL & MOBILE OPTIMIZED STYLES --- */
     * { box-sizing: border-box; }
     html { font-size: 16px; }
     body {
       margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg); color: var(--fg); display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start; min-height: 100vh; padding: 1.5rem;
+      align-items: center; justify-content: flex-start; min-height: 100vh; padding: 1rem; /* Optimized padding */
       transition: background 0.3s, color 0.3s;
     }
     .container { width: 100%; max-width: 520px; }
     .card {
       background: var(--card-bg); border-radius: 1rem; box-shadow: var(--shadow);
-      padding: 1.5rem; animation: fadeIn 0.5s ease-out; margin-bottom: 1.5rem;
+      padding: 1.25rem; animation: fadeIn 0.5s ease-out; margin-bottom: 1.5rem;
       border: 1px solid var(--border); transition: background 0.3s, border 0.3s;
     }
-    h1 { text-align: center; font-size: 1.75rem; margin: 0 0 1.5rem; }
+    h1 { text-align: center; font-size: 1.6rem; margin: 0 0 1.5rem; }
     
-    /* --- UI ELEMENTS --- */
     .progress-area { margin-bottom: 1.5rem; }
     .level-display { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-weight: 600; font-size: 1rem; }
     #current-level { font-size: 1.1rem; color: var(--accent); }
     .xp-bar-container { height: 12px; background: var(--progress-bar-bg); border-radius: 6px; overflow: hidden; }
     #xp-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.4s ease-out; }
     #xp-text { text-align: right; font-size: 0.85rem; color: var(--muted); }
+
     #questionBox {
-      min-height: 140px; border-radius: 0.75rem; background: var(--bg); display: flex;
+      min-height: 120px; border-radius: 0.75rem; background: var(--bg); display: flex;
       justify-content: center; align-items: center; padding: 1rem; margin-bottom: 1.5rem;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
-    #question { font-size: 2rem; text-align: center; }
-    .controls { display: flex; gap: 0.75rem; }
+    #question { font-size: 1.8rem; text-align: center; }
+
+    .controls { display: flex; flex-direction: column; gap: 0.75rem; } /* Stacked by default */
+
     input[type="number"] {
-      flex: 1; padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);
+      width: 100%; padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);
       font-size: 1.1rem; background: var(--card-bg); color: var(--fg);
       -moz-appearance: textfield; transition: border-color 0.2s, box-shadow 0.2s;
     }
     input[type="number"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--unlocked-bg); outline: none; }
     button.btn {
-      background: var(--accent); color: var(--accent-fg); border: none; border-radius: 0.5rem;
+      width: 100%; background: var(--accent); color: var(--accent-fg); border: none; border-radius: 0.5rem;
       padding: 0.8rem 1.25rem; font-size: 1.1rem; font-weight: 600; cursor: pointer;
       transition: opacity 0.2s, transform 0.1s;
     }
-    button.btn:active { transform: scale(0.97); }
+    button.btn:active { transform: scale(0.98); }
     button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .feedback {
       margin-top: 1rem; text-align: center; min-height: 2.5rem; font-weight: bold;
-      font-size: 1.2rem; display: flex; justify-content: center; align-items: center;
+      font-size: 1.1rem; display: flex; justify-content: center; align-items: center;
       transition: all 0.3s ease;
     }
     .stats {
-      display: flex; justify-content: space-around; margin-top: 1rem; font-size: 1rem;
-      color: var(--muted); border-top: 1px solid var(--border); padding-top: 1rem; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem; /* Stacked on mobile */
+      margin-top: 1rem; font-size: 1rem; color: var(--muted);
+      border-top: 1px solid var(--border); padding-top: 1rem; text-align: center;
     }
     .stat-item span { display: block; font-weight: 600; font-size: 1.2rem; color: var(--fg); }
 
-    .progression-guide { text-align: left; }
     .progression-guide h4 { margin-top: 0; text-align: center; font-size: 1.2rem; margin-bottom: 1rem; }
     .progression-guide ul { list-style: none; padding: 0; margin: 0; }
     .progression-guide li { padding: 0.6rem 0.8rem; border-radius: 0.5rem; margin-bottom: 0.5rem; display: flex; align-items: center; transition: background-color 0.2s; }
@@ -94,6 +95,14 @@
     .progression-guide li.next-unlock { background-color: var(--next-unlock-bg); }
     .progression-guide strong { color: var(--fg); min-width: 80px; }
     .progression-guide span { font-size: 0.9rem; color: var(--muted); }
+    
+    /* Media Query for larger screens */
+    @media (min-width: 420px) {
+      .controls { flex-direction: row; } /* Side-by-side on wider screens */
+      .stats { flex-direction: row; justify-content: space-around; } /* Side-by-side stats */
+      button.btn { width: auto; }
+      input[type="number"] { width: auto; flex: 1; }
+    }
     
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -122,42 +131,30 @@
 </div>
 
 <script>
+    // --- JAVASCRIPT LOGIC (identical to previous version) ---
     const elements = {
         level: document.getElementById('current-level'), streak: document.getElementById('streak'), xpBar: document.getElementById('xp-bar'),
         xpText: document.getElementById('xp-text'), question: document.getElementById('question'), answer: document.getElementById('answer'),
         checkBtn: document.getElementById('check'), feedback: document.getElementById('feedback'), avgTime: document.getElementById('avg-time'),
         totalCorrect: document.getElementById('total-correct'), progressionList: document.getElementById('progression-list')
     };
-
     let state = {
       level: 1, xp: 0, streak: 0, totalCorrect: 0, totalTime: 0,
       currentQuestion: { latex: '', value: 0 }, questionStartTime: 0, isChecking: false
     };
     const STORAGE_KEY = 'mentalMathMasteryState';
-
     const levelsConfig = [
-        { xpToNext: 100,  desc: "Basic Multiplication & Squares (1-10)" },       // 1
-        { xpToNext: 150,  desc: "Introduction to Cubes (1-10)" },                // 2
-        { xpToNext: 200,  desc: "Advanced Multiplication Tables (11-20)" },      // 3
-        { xpToNext: 250,  desc: "Intermediate Squares (11-20)" },                // 4
-        { xpToNext: 300,  desc: "Basic Square Roots" },                          // 5
-        { xpToNext: 400,  desc: "Two Operations: (+, -, x, ²)" },               // 6
-        { xpToNext: 450,  desc: "Advanced Cubes (11-20)" },                      // 7
-        { xpToNext: 500,  desc: "Introduction to Cube Roots" },                  // 8
-        { xpToNext: 600,  desc: "Fraction to Decimal Conversion" },              // 9
-        { xpToNext: 750,  desc: "Complex Two Operations" },                      // 10
-        { xpToNext: 900, desc: "Three Operation Problems" },                    // 11
-        { xpToNext: 1000, desc: "Basic Percentages (10%, 25%, 50%)" },           // 12
-        { xpToNext: 1100, desc: "Chains with Simple Division" },                 // 13
-        { xpToNext: 1200, desc: "Larger Number Addition/Subtraction" },          // 14
-        { xpToNext: 1300, desc: "Advanced Percentages (5%, 20%, 75%)" },         // 15
-        { xpToNext: 1400, desc: "Financial Math: Discounts" },                   // 16
-        { xpToNext: 1500, desc: "Advanced Fractions (a/b of C)" },               // 17
-        { xpToNext: 1600, desc: "Chains with all Operators" },                   // 18
-        { xpToNext: 1750, desc: "Financial Math: Sales Tax" },                   // 19
-        { xpToNext: 2000, desc: "Mastery Gauntlet: 2-4 Ops" },                   // 20+
+        { xpToNext: 100,  desc: "Basic Multiplication & Squares (1-10)" }, { xpToNext: 150,  desc: "Introduction to Cubes (1-10)" },
+        { xpToNext: 200,  desc: "Advanced Multiplication Tables (11-20)" }, { xpToNext: 250,  desc: "Intermediate Squares (11-20)" },
+        { xpToNext: 300,  desc: "Basic Square Roots" }, { xpToNext: 400,  desc: "Two Operations: (+, -, x, ²)" },
+        { xpToNext: 450,  desc: "Advanced Cubes (11-20)" }, { xpToNext: 500,  desc: "Introduction to Cube Roots" },
+        { xpToNext: 600,  desc: "Fraction to Decimal Conversion" }, { xpToNext: 750,  desc: "Complex Two Operations" },
+        { xpToNext: 900, desc: "Three Operation Problems" }, { xpToNext: 1000, desc: "Basic Percentages (10%, 25%, 50%)" },
+        { xpToNext: 1100, desc: "Chains with Simple Division" }, { xpToNext: 1200, desc: "Larger Number Addition/Subtraction" },
+        { xpToNext: 1300, desc: "Advanced Percentages (5%, 20%, 75%)" }, { xpToNext: 1400, desc: "Financial Math: Discounts" },
+        { xpToNext: 1500, desc: "Advanced Fractions (a/b of C)" }, { xpToNext: 1600, desc: "Chains with all Operators" },
+        { xpToNext: 1750, desc: "Financial Math: Sales Tax" }, { xpToNext: 2000, desc: "Mastery Gauntlet: 2-4 Ops" },
     ];
-
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     const choice = (arr) => arr[randInt(0, arr.length - 1)];
     const fround = (num) => parseFloat(num.toFixed(4));
@@ -165,45 +162,26 @@
     function getAvailableSkills() {
         const lvl = state.level;
         const skills = ['tables_basic', 'squares_basic'];
-        if (lvl >= 2) skills.push('cubes_basic');
-        if (lvl >= 3) skills.push('tables_adv');
-        if (lvl >= 4) skills.push('squares_adv');
-        if (lvl >= 5) skills.push('roots_sq');
-        if (lvl >= 7) skills.push('cubes_adv');
-        if (lvl >= 8) skills.push('roots_cube');
-        if (lvl >= 9) skills.push('fractions_basic');
-        if (lvl >= 12) skills.push('percent_basic');
-        if (lvl >= 13) skills.push('division');
-        if (lvl >= 14) skills.push('large_arith');
-        if (lvl >= 15) skills.push('percent_adv');
-        if (lvl >= 16) skills.push('financial_discount');
-        if (lvl >= 17) skills.push('fractions_adv');
-        if (lvl >= 19) skills.push('financial_tax');
+        if (lvl >= 2) skills.push('cubes_basic'); if (lvl >= 3) skills.push('tables_adv');
+        if (lvl >= 4) skills.push('squares_adv'); if (lvl >= 5) skills.push('roots_sq');
+        if (lvl >= 7) skills.push('cubes_adv'); if (lvl >= 8) skills.push('roots_cube');
+        if (lvl >= 9) skills.push('fractions_basic'); if (lvl >= 12) skills.push('percent_basic');
+        if (lvl >= 13) skills.push('division'); if (lvl >= 14) skills.push('large_arith');
+        if (lvl >= 15) skills.push('percent_adv'); if (lvl >= 16) skills.push('financial_discount');
+        if (lvl >= 17) skills.push('fractions_adv'); if (lvl >= 19) skills.push('financial_tax');
         return skills;
     }
-
     function generateQuestion() {
         const lvl = state.level;
-        let q;
-        const skills = getAvailableSkills();
-        
-        if (lvl < 6) { q = generateSingleOp(choice(skills)); }
-        else if (lvl < 11) { q = generateMultiOp(2, skills.filter(s => !s.includes('large') && !s.includes('financial'))); }
-        else if (lvl === 11) { q = generateMultiOp(randInt(2, 3), skills.filter(s => !s.includes('large') && !s.includes('financial'))); }
-        else { // Mastery levels
-            const singleOpChance = 0.3;
-            if (Math.random() < singleOpChance) {
-                 q = generateSingleOp(choice(skills));
-            } else {
-                 q = generateMultiOp(randInt(2, lvl > 20 ? 4 : 3), skills.filter(s => !s.includes('large')));
-            }
-        }
-        
+        let q; const skills = getAvailableSkills();
+        if (lvl < 6) q = generateSingleOp(choice(skills));
+        else if (lvl < 11) q = generateMultiOp(2, skills.filter(s => !s.includes('large') && !s.includes('financial')));
+        else if (lvl === 11) q = generateMultiOp(randInt(2, 3), skills.filter(s => !s.includes('large') && !s.includes('financial')));
+        else { const singleOpChance = 0.3; if (Math.random() < singleOpChance) q = generateSingleOp(choice(skills)); else q = generateMultiOp(randInt(2, lvl >= 20 ? 4 : 3), skills.filter(s => !s.includes('large'))); }
         state.currentQuestion = q;
         elements.question.innerHTML = `\\(${q.latex}\\)`;
         if (window.MathJax) MathJax.typesetPromise([elements.question]).catch(console.error);
     }
-    
     function generateSingleOp(type) {
         let latex, value, a, b, c;
         switch (type) {
@@ -227,114 +205,69 @@
         }
         return { latex, value };
     }
-
     function generateMultiOp(numOps, skills) {
         let parts = [], latexParts = [];
         for (let i = 0; i < numOps; i++) {
-            const opType = choice(skills.filter(s => !['fractions_basic', 'large_arith'].includes(s)));
-            const p = generateSingleOp(opType);
-            parts.push(p.value);
-            latexParts.push(`(${p.latex})`);
+            const opType = choice(skills.filter(s => !['fractions_basic', 'large_arith'].includes(s))); const p = generateSingleOp(opType);
+            parts.push(p.value); latexParts.push(`(${p.latex})`);
         }
         let finalValue = parts[0]; let finalLatex = latexParts[0];
         for (let i = 1; i < parts.length; i++) {
-            const op = choice(['+', '-']);
-            finalValue += (op === '+' ? parts[i] : -parts[i]);
-            finalLatex += ` ${op} ${latexParts[i]}`;
+            const op = choice(['+', '-']); finalValue += (op === '+' ? parts[i] : -parts[i]); finalLatex += ` ${op} ${latexParts[i]}`;
         }
         return { latex: finalLatex, value: fround(finalValue) };
     }
-
     function handleCheckAnswer() {
-        if (state.isChecking) return;
-        state.isChecking = true;
-        elements.checkBtn.disabled = true;
-
-        const userAnswer = parseFloat(elements.answer.value);
-        if (isNaN(userAnswer)) {
-            state.isChecking = false; elements.checkBtn.disabled = false; return;
-        }
-
-        const timeTaken = (Date.now() - state.questionStartTime) / 1000;
-        const isCorrect = Math.abs(userAnswer - state.currentQuestion.value) < 0.001;
-
+        if (state.isChecking) return; state.isChecking = true; elements.checkBtn.disabled = true;
+        const userAnswer = parseFloat(elements.answer.value); if (isNaN(userAnswer)) { state.isChecking = false; elements.checkBtn.disabled = false; return; }
+        const timeTaken = (Date.now() - state.questionStartTime) / 1000; const isCorrect = Math.abs(userAnswer - state.currentQuestion.value) < 0.001;
         if (isCorrect) {
-            state.streak++; state.totalCorrect++; state.totalTime += timeTaken;
-            const score = calculateXP(timeTaken);
-            addXP(score.totalXp);
+            state.streak++; state.totalCorrect++; state.totalTime += timeTaken; const score = calculateXP(timeTaken); addXP(score.totalXp);
             elements.feedback.innerHTML = `Correct! <span style="color:var(--success); margin-left:8px;">+${score.baseXp} XP ${score.streakBonus > 0 ? `(+${score.streakBonus} 🔥)` : ''}</span>`;
             elements.feedback.style.color = 'var(--success)';
         } else {
-            state.streak = 0;
-            elements.feedback.innerHTML = `Incorrect. Answer: <span style="color:var(--danger); margin-left:8px;">${state.currentQuestion.value}</span>`;
+            state.streak = 0; elements.feedback.innerHTML = `Incorrect. Answer: <span style="color:var(--danger); margin-left:8px;">${state.currentQuestion.value}</span>`;
             elements.feedback.style.color = 'var(--danger)';
         }
-        updateUI(); saveState();
-        setTimeout(prepareNextQuestion, 1800);
+        updateUI(); saveState(); setTimeout(prepareNextQuestion, 1800);
     }
-    
     function prepareNextQuestion() {
-        elements.feedback.textContent = '';
-        elements.feedback.style.transform = "scale(1)";
-        elements.answer.value = '';
-        generateQuestion();
-        elements.answer.focus();
-        state.isChecking = false;
-        elements.checkBtn.disabled = false;
+        elements.feedback.textContent = ''; elements.feedback.style.transform = "scale(1)"; elements.answer.value = '';
+        generateQuestion(); elements.answer.focus(); state.isChecking = false; elements.checkBtn.disabled = false;
     }
-
     function calculateXP(timeSeconds) {
-        const base = Math.max(5, 20 - Math.floor(timeSeconds * 1.5));
-        const streakBonus = Math.min(25, Math.floor(state.streak * 1.5));
+        const base = Math.max(5, 20 - Math.floor(timeSeconds * 1.5)); const streakBonus = Math.min(25, Math.floor(state.streak * 1.5));
         return { baseXp: base, streakBonus, totalXp: base + streakBonus };
     }
-    
     function addXP(amount) {
-        state.xp += amount;
-        const requiredXp = (levelsConfig[state.level - 1] || levelsConfig[levelsConfig.length-1]).xpToNext;
+        state.xp += amount; const requiredXp = (levelsConfig[state.level - 1] || levelsConfig[levelsConfig.length-1]).xpToNext;
         if (state.xp >= requiredXp) {
-            state.level++; state.xp -= requiredXp;
-            elements.feedback.innerHTML = `🎉 LEVEL UP! You are now Level ${state.level}! 🎉`;
+            state.level++; state.xp -= requiredXp; elements.feedback.innerHTML = `🎉 LEVEL UP! You are now Level ${state.level}! 🎉`;
             elements.feedback.style.transform = "scale(1.1)";
         }
     }
-
     function updateUI() {
-        const levelConf = levelsConfig[state.level - 1] || levelsConfig[levelsConfig.length-1];
-        const xpToNext = levelConf.xpToNext;
-        elements.level.textContent = state.level;
-        elements.xpText.textContent = `${state.xp} / ${xpToNext} XP`;
+        const levelConf = levelsConfig[state.level - 1] || levelsConfig[levelsConfig.length-1]; const xpToNext = levelConf.xpToNext;
+        elements.level.textContent = state.level; elements.xpText.textContent = `${state.xp} / ${xpToNext} XP`;
         elements.xpBar.style.width = `${Math.min(100, (state.xp / xpToNext) * 100)}%`;
         elements.streak.textContent = state.streak > 1 ? `🔥 ${state.streak} Streak` : '';
-        elements.totalCorrect.textContent = state.totalCorrect;
-        elements.avgTime.textContent = state.totalCorrect > 0 ? (state.totalTime / state.totalCorrect).toFixed(2) + 's' : '-';
-        
+        elements.totalCorrect.textContent = state.totalCorrect; elements.avgTime.textContent = state.totalCorrect > 0 ? (state.totalTime / state.totalCorrect).toFixed(2) + 's' : '-';
         elements.progressionList.innerHTML = '';
         levelsConfig.forEach((lvl, index) => {
-            const currentLevelIndex = state.level - 1;
-            const li = document.createElement('li');
-            if (index < currentLevelIndex) li.className = 'unlocked';
-            else if (index === currentLevelIndex) li.className = 'next-unlock';
+            const li = document.createElement('li'); const currentLevelIndex = state.level - 1;
+            if (index < currentLevelIndex) li.className = 'unlocked'; else if (index === currentLevelIndex) li.className = 'next-unlock';
             li.innerHTML = `<strong>Level ${index + 1}</strong> <span>${lvl.desc}</span>`;
             elements.progressionList.appendChild(li);
         });
     }
-
     function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-    function loadState() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) { state = { ...state, ...JSON.parse(saved) }; }
-    }
+    function loadState() { const saved = localStorage.getItem(STORAGE_KEY); if (saved) { state = { ...state, ...JSON.parse(saved) }; } }
     
     elements.checkBtn.addEventListener('mousedown', (e) => e.preventDefault());
     elements.checkBtn.addEventListener('click', handleCheckAnswer);
     elements.answer.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleCheckAnswer(); });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        loadState();
-        updateUI();
-        prepareNextQuestion();
-    });
+    document.addEventListener('DOMContentLoaded', () => { loadState(); updateUI(); prepareNextQuestion(); });
 </script>
 </body>
 </html>
