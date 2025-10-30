@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mental Math Trainer</title>
+  <!-- MathJax Configuration for Automatic Line Breaking -->
+  <script>
+    window.MathJax = {
+      chtml: { linebreaks: { automatic: true } },
+      tex: { inlineMath: [['\\(', '\\)']] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <style>
+    /* REVERTED: Original Theme Colors */
+    :root {
+      --bg: #fff;
+      --fg: #0a0a0a;
+      --muted: #777;
+      --accent: #000; /* Reverted to black */
+      --green: #28a745;
+      --orange: #fd7e14;
+      --red: #dc3545;
+      --light-gray: #f0f0f0;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 16px; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Aligned to top to show scoring guide */
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: #fafafa; /* Original card color */
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 1.25rem;
+      animation: fadeIn 0.5s ease-out;
+      margin-bottom: 1.5rem; /* Space between cards */
+    }
+    h1 {
+      text-align: center; font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem;
+    }
+    .modes {
+      display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;
+    }
+    .mode {
+      border: none; border-radius: 0.5rem; background: #eaeaea; padding: 0.6rem 1rem;
+      cursor: pointer; font-size: 0.9rem; font-weight: 500;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .mode.active { background: var(--fg); color: var(--bg); }
+    .mode:active { transform: scale(0.96); }
+    #questionBox {
+      min-height: 130px; border-radius: 0.75rem; background: #fff; display: flex;
+      justify-content: center; align-items: center; padding: 1rem;
+      margin-bottom: 1rem; box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    }
+    #question { font-size: 1.75rem; text-align: center; word-wrap: break-word; }
+    .controls { display: flex; gap: 0.5rem; }
+    input[type="number"] {
+      flex: 1; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #ddd;
+      font-size: 1rem; -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    button.btn {
+      background: var(--fg); color: var(--bg); border: none; border-radius: 0.5rem;
+      padding: 0.75rem 1rem; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+    .feedback {
+      margin-top: 0.75rem; text-align: center; min-height: 2.25rem; font-weight: bold;
+      font-size: 1.1rem; display: flex; justify-content: center; align-items: center;
+      transition: color 0.3s ease, opacity 0.3s ease;
+    }
+    .stats {
+      display: flex; justify-content: space-between; margin-top: 1rem;
+      font-size: 0.9rem; color: var(--muted); border-bottom: 1px solid var(--light-gray);
+      padding-bottom: 0.75rem;
+    }
+    .top-scores { margin-top: 0.75rem; text-align: center; }
+    .top-scores h3 {
+      margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--muted);
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .top-scores ol {
+      list-style-type: none; padding: 0; margin: 0; display: flex;
+      justify-content: center; gap: 1rem;
+    }
+    .top-scores li {
+      font-weight: bold; font-size: 1.2rem; color: var(--fg);
+      background: var(--light-gray); border-radius: 0.5rem; padding: 0.4rem 0.8rem;
+    }
+    /* ADDED: Scoring Guide Styles using ORIGINAL theme */
+    .scoring-guide {
+        width: 100%; max-width: 480px; background: #fafafa; padding: 1.25rem;
+        border-radius: 1rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .scoring-guide h4 {
+        margin-top: 0; margin-bottom: 0.8rem; text-align: center; font-size: 1rem;
+    }
+    .scoring-guide ul {
+        list-style: none; padding-left: 0; margin: 0; font-size: 0.9rem;
+    }
+    .scoring-guide li {
+        padding: 0.4rem 0; display: flex; align-items: center;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    .scoring-guide li:last-child { border-bottom: none; }
+    .scoring-guide strong { color: var(--fg); margin-right: 0.5rem; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Mental Math Trainer</h1>
+    <div class="modes">
+      <button class="mode active" data-mode="easy">Easy</button>
+      <button class="mode" data-mode="medium">Medium</button>
+      <button class="mode" data-mode="hard">Hard</button>
+    </div>
+    <div id="questionBox"><div id="question"></div></div>
+    <div class="controls">
+      <input id="answer" type="number" placeholder="Your answer" autocomplete="off" />
+      <button id="check" class="btn">Check</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="stats">
+      <div>Total Qs: <span id="total">0</span></div>
+      <div>Total Points: <span id="points">0</span></div>
+      <div>Last Score: <span id="last">-</span></div>
+    </div>
+    <div class="top-scores">
+        <h3>Top 3 Scores (This Session)</h3>
+        <ol id="top-scores-list">
+            <li>-</li><li>-</li><li>-</li>
+        </ol>
+    </div>
+  </div>
+
+  <!-- ADDED: Scoring Guide Section -->
+  <div class="scoring-guide">
+    <h4>How Scoring Works</h4>
+    <ul>
+        <li><strong>Correct Answer:</strong> Points are awarded based on speed and difficulty.</li>
+        <li><strong>Max Points:</strong> Easy (<strong>5</strong>), Medium (<strong>7</strong>), Hard (<strong>10</strong>).</li>
+        <li><strong>Time Penalty:</strong> The faster you answer, the more points you get. You lose points for every few seconds you take.</li>
+        <li><strong>Incorrect Answer:</strong> You receive <strong>0</strong> points.</li>
+    </ul>
+  </div>
+
+  <script>
+    // JavaScript logic is identical to the previous version and is not repeated here for brevity.
+    // It correctly handles session scores vs. persistent scores.
+    const questionEl = document.getElementById('question');
+    const answerEl = document.getElementById('answer');
+    const feedbackEl = document.getElementById('feedback');
+    const totalEl = document.getElementById('total');
+    const pointsEl = document.getElementById('points');
+    const lastEl = document.getElementById('last');
+    const modes = document.querySelectorAll('.mode');
+    const checkBtn = document.getElementById('check');
+    const topScoresListEl = document.getElementById('top-scores-list');
+
+    let state = {
+      mode: 'easy',
+      currentQuestion: { latex: '', value: 0 },
+      totalQuestions: 0,
+      totalPoints: 0,
+      sessionTopScores: [],
+      questionStartTime: 0,
+    };
+
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const STORAGE_KEY = 'mentalMathTrainerLifetimeData';
+
+    function saveData() {
+        const dataToSave = {
+            totalQuestions: state.totalQuestions,
+            totalPoints: state.totalPoints,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+    }
+
+    function loadData() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            state.totalQuestions = parsedData.totalQuestions || 0;
+            state.totalPoints = parsedData.totalPoints || 0;
+        }
+    }
+
+    function renderStats() {
+        totalEl.textContent = state.totalQuestions;
+        pointsEl.textContent = state.totalPoints;
+    }
+
+    function renderSessionTopScores() {
+        topScoresListEl.innerHTML = '';
+        const scoresToDisplay = state.sessionTopScores.length > 0 ? state.sessionTopScores : ['-', '-', '-'];
+        for (let i = 0; i < 3; i++) {
+            const score = scoresToDisplay[i];
+            const li = document.createElement('li');
+            li.textContent = score !== undefined ? score : '-';
+            topScoresListEl.appendChild(li);
+        }
+    }
+
+    function updateSessionTopScores(newScore) {
+        if (newScore > 0) {
+            state.sessionTopScores.push(newScore);
+            state.sessionTopScores.sort((a, b) => b - a);
+            state.sessionTopScores = state.sessionTopScores.slice(0, 3);
+        }
+    }
+
+    function makeSingleOperation() {
+      const type = ['add', 'sub', 'mul', 'div', 'sq', 'root'][randInt(0, 5)];
+      let a, b, latex, value;
+      switch (type) {
+        case 'add': a = randInt(10, 500); b = randInt(10, 500); latex = `${a} + ${b}`; value = a + b; break;
+        case 'sub': a = randInt(100, 999); b = randInt(10, a - 1); latex = `${a} - ${b}`; value = a - b; break;
+        case 'mul': a = randInt(2, 40); b = randInt(2, 40); latex = `${a} \\times ${b}`; value = a * b; break;
+        case 'div': b = randInt(2, 25); value = randInt(2, 25); a = b * value; latex = `\\frac{${a}}{${b}}`; break;
+        case 'sq': a = randInt(2, 30); latex = `${a}^{2}`; value = a * a; break;
+        case 'root':
+          const roots = [4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225];
+          a = roots[randInt(0, roots.length - 1)]; latex = `\\sqrt{${a}}`; value = Math.sqrt(a); break;
+      }
+      return { latex, value };
+    }
+
+    function generateQuestion(mode) {
+      const numOperations = mode === 'easy' ? 1 : (mode === 'medium' ? 2 : randInt(2, 3));
+      let parts = [], latexParts = [];
+      for (let i = 0; i < numOperations; i++) {
+          const p = makeSingleOperation();
+          parts.push(p.value);
+          latexParts.push(numOperations > 1 ? `(${p.latex})` : p.latex);
+      }
+      let finalValue = parts[0]; let finalLatex = latexParts[0];
+      for (let i = 1; i < parts.length; i++) {
+          const op = ['+', '-'][randInt(0, 1)];
+          finalValue += (op === '+' ? parts[i] : -parts[i]);
+          finalLatex += ` ${op} ${latexParts[i]}`;
+      }
+      finalValue = Math.round(finalValue * 100) / 100;
+      return { latex: finalLatex, value: finalValue };
+    }
+
+    function newQuestion() {
+      const q = generateQuestion(state.mode);
+      state.currentQuestion = { latex: q.latex, value: q.value };
+      questionEl.innerHTML = `\\(${state.currentQuestion.latex}\\)`;
+      if (window.MathJax) { MathJax.typesetPromise([questionEl]).catch((err) => console.log('MathJax error: ', err)); }
+      answerEl.value = ''; answerEl.focus(); feedbackEl.textContent = '';
+      state.questionStartTime = Date.now();
+    }
+
+    function computeScore(userAnswer, correctAnswer, timeSeconds, difficulty) {
+      if (userAnswer !== correctAnswer) return 0;
+      const maxPoints = { easy: 5, medium: 7, hard: 10 }[difficulty];
+      const timePenalty = Math.floor(timeSeconds / 3);
+      return Math.max(1, maxPoints - timePenalty);
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseFloat(answerEl.value);
+      if (isNaN(userAnswer)) {
+        feedbackEl.textContent = 'Please enter a valid number!';
+        feedbackEl.style.color = 'var(--red)'; return;
+      }
+      const timeTaken = (Date.now() - state.questionStartTime) / 1000;
+      const score = computeScore(userAnswer, state.currentQuestion.value, timeTaken, state.mode);
+      state.totalQuestions++;
+      state.totalPoints += score;
+      lastEl.textContent = score;
+      updateSessionTopScores(score);
+      saveData();
+      renderStats();
+      renderSessionTopScores();
+      feedbackEl.textContent = `Correct: ${state.currentQuestion.value} | You got ${score} points!`;
+      feedbackEl.style.color = score > (state.mode === 'easy' ? 3 : state.mode === 'medium' ? 5 : 7) ? 'var(--green)' : score > 2 ? 'var(--orange)' : 'var(--red)';
+      setTimeout(newQuestion, 1500);
+    }
+
+    modes.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modes.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active'); state.mode = btn.dataset.mode;
+        newQuestion();
+      });
+    });
+
+    checkBtn.addEventListener('mousedown', (e) => { e.preventDefault(); checkAnswer(); });
+    answerEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { checkAnswer(); } });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        renderStats();
+        renderSessionTopScores();
+        newQuestion();
+    });
+  </script>
+</body>
+</html>
